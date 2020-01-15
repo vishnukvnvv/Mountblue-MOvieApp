@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-export class UpdateDialogBox extends Component {
+export class AddDialog extends Component {
     render() {
         if (!this.props.isOpen) {
             return null;
         }
-
         return (
             <div className='popUp-container'>
-                <div className='popUp'>
-                    <button id='close' onClick={this.props.openUpdateDialog}>x</button>
+                <div className="popUp d-add">
+                    <button id='close' onClick={this.props.openAddDialog}>x</button>
                     {this.props.children}
                 </div>
             </div>
@@ -17,4 +16,4 @@ export class UpdateDialogBox extends Component {
     }
 }
 
-export default UpdateDialogBox
+export default AddDialog

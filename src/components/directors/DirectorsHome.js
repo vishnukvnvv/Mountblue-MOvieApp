@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import DirectorContainer from './DirectorContainer';
 import UpdateDialogBox from '../home/UpdateDialogBox';
+import AddDialog from '../home/AddDialog';
 
 class DirectorsHome extends Component {
 
@@ -15,20 +16,21 @@ class DirectorsHome extends Component {
     }
 
     addReq = async () => {
-        console.log('add director triggered');
+        const newObj = this.props.newRecord;
         await fetch("http://localhost:8082/api/directors", {
             method: 'POST',
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name: "vishnu" }),
+            body: JSON.stringify(newObj),
         }).then(res => res.json()).then(data => {
             console.log(data);
         }).catch(err => {
             console.log(err)
-        })
-        await this.componentDidMount();
+        });
+        this.props.openAddDialog();
+        this.props.resetNewRecord();
     }
 
     getSingleDirector = async (id) => await fetch(`http://localhost:8082/api/directors/${id}`).then(res => res.json()).then(result => result).catch(error => {
@@ -83,19 +85,31 @@ class DirectorsHome extends Component {
         this.props.setDialogInputValue(event.target.value);
     }
 
+    newInput = (event) => {
+        this.props.newRecordFunction(event.target.name, event.target.value);
+    }
+
     render() {
         return (
             <div className='container'>
-                <button className='add' onClick={this.addReq}>Add Director</button>
+                <button className='add' onClick={this.props.openAddDialog}>Add Director</button>
                 <DirectorContainer data={this.props.data} onUpdate={this.onUpdate} onDelete={this.onDelete} openContent={this.openDirector} />
                 <UpdateDialogBox isOpen={this.props.updateDialog} openUpdateDialog={this.props.openUpdateDialog}>
                     <select className='selection' required onChange={this.selectChange}>
                         <option value="0" selected disabled>select</option>
                         <option value="name">Name</option>
                     </select>
-                    <input type="text" className='d-input' onChange={this.props.changeDialogInputValue} value={this.props.dialogInputValue} />
+                    <input type="text" className='d-input' onChange={this.props.changeDialogInputValue} value={this.props.dialogInputValue} placeholder = "Enter here..."/>
                     <button type="submit" className='update d-update' onClick={this.onUpdateApiRequest}>Done</button>
                 </UpdateDialogBox>
+                <AddDialog isOpen ={this.props.addDialog} openAddDialog={this.props.openAddDialog}>
+                    <legend className="add-title"><b>New Director details</b></legend>
+                    <div className = "add-form" >
+                        <label>Name</label>
+                        <input type = "text" className = "d-input"  name = "name" onChange = {this.newInput} value = {this.props.newRecord.name} placeholder = "Enter Name..."/>
+                    </div>
+                    <button type = "submit" className = "update d-add-btn" onClick = {this.addReq}>Submit</button>
+                </AddDialog>
             </div>
         )
     }

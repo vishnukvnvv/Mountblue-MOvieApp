@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import MovieContainer from './MovieContainer';
 import UpdateDialogBox from '../home/UpdateDialogBox';
+import AddDialog from '../home/AddDialog';
 
 class MoviesHome extends Component {
     componentDidMount() {
@@ -9,16 +10,29 @@ class MoviesHome extends Component {
         });
     }
 
-    onAdd = () => {
-        console.log('add movie triggered');
+    onAdd = async () => {
+        const newObj = this.props.newRecord;
+        await fetch(`http://localhost:8082/api/movies/`, {
+            method: 'POST',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newObj),
+        }).then(res => res.json()).then(result => {
+            console.log(result);
+        }).catch(error => {
+            console.log(error);
+        });
+        this.props.openAddDialog();
+        this.props.resetNewRecord();
     }
 
     getSingleMovie = async (id) => await fetch(`http://localhost:8082/api/movies/${id}`).then(res => res.json()).then(result => result);
 
     onUpdate = async (event) => {
         const id = event.target.parentElement.parentElement.getAttribute('id');
-        console.log(id, 'update movie triggered')
-        this.props.openUpdateDialog(id);
+        this.props.openUpdateDialog();
         const singleData = await this.getSingleMovie(id).then(res => res);
         this.props.setSingleRecord(singleData);
     }
@@ -80,10 +94,15 @@ class MoviesHome extends Component {
         this.props.setDialogInputValue(event.target.value);
     }
 
+    newInput = (event) => {
+        this.props.newRecordFunction(event.target.name, event.target.value);
+    }
+
+
     render() {
         return (
             <div className='container'>
-                <button className='add' onClick={this.onAdd} >Add Movie</button>
+                <button className='add' onClick={this.props.openAddDialog} >Add Movie</button>
                 <MovieContainer data={this.props.data} onUpdate={this.onUpdate} onDelete={this.onDelete} />
                 <UpdateDialogBox isOpen={this.props.updateDialog} openUpdateDialog={this.props.openUpdateDialog}>
                     <select className='selection movie-select' required onChange={this.selectChange}>
@@ -100,9 +119,37 @@ class MoviesHome extends Component {
                         <option value="Actor">Actor</option>
                         <option value="Year">Year</option>
                     </select>
-                    <input type="text" className='d-input movie-input' onChange={this.props.changeDialogInputValue} value={this.props.dialogInputValue} />
+                    <input type="text" className='d-input movie-input' onChange={this.props.changeDialogInputValue} value={this.props.dialogInputValue} placeholder = "Enter here..."/>
                     <button className='update d-update' onClick={this.onUpdateApiRequest}>Done</button>
                 </UpdateDialogBox>
+                <AddDialog isOpen={this.props.addDialog} openAddDialog={this.props.openAddDialog}>
+                    <legend className="add-title"><b>New Movie details</b></legend>
+                    <div className="add-form">
+                        <label>Title</label>
+                        <input type="text" className="d-input" name="title" onChange={this.newInput} value={this.props.newRecord.title} placeholder = "Enter Title..."/>
+                        <label>Description</label>
+                        <input type="text" className="d-input" name="desc" onChange={this.newInput} value={this.props.newRecord.desc} placeholder = "Enter Description..."/>
+                        <label>Runtime</label>
+                        <input type="number" className="d-input" name="runtime" onChange={this.newInput} value={this.props.newRecord.runtime} placeholder = "Enter Runtine..."/>
+                        <label>Genre</label>
+                        <input type="text" className="d-input" name="genre" onChange={this.newInput} value={this.props.newRecord.genre} placeholder = "Enter Genre..."/>
+                        <label>Rating</label>
+                        <input type="number" className="d-input" name="rate" onChange={this.newInput} value={this.props.newRecord.rate} placeholder = "Enter Rate..."/>
+                        <label>Metascore</label>
+                        <input type="number" className="d-input" name="metascore" onChange={this.newInput} value={this.props.newRecord.metascore} placeholder = "Enter Metascore..."/>
+                        <label>Votes</label>
+                        <input type="number" className="d-input" name="votes" onChange={this.newInput} value={this.props.newRecord.votes} placeholder = "Enter Votes..."/>
+                        <label>Gross_Earning_in_Millons</label>
+                        <input type="number" className="d-input" name="gross" onChange={this.newInput} value={this.props.newRecord.gross} placeholder = "Enter Gross earnings..."/>
+                        <label>DirectorId</label>
+                        <input type="number" className="d-input" name="directorId" onChange={this.newInput} value={this.props.newRecord.directorId} placeholder = "Enter Director id..."/>
+                        <label>Actor</label>
+                        <input type="text" className="d-input" name="actor" onChange={this.newInput} value={this.props.newRecord.actor} placeholder = "Enter Actor..."/>
+                        <label>Year</label>
+                        <input type="number" className="d-input" name="year" onChange={this.newInput} value={this.props.newRecord.year} placeholder = "Enter year..."/>
+                    </div>
+                    <button type="submit" className="update d-add-btn" onClick={this.onAdd}>Submit</button>
+                </AddDialog>
             </div>
         )
     }
