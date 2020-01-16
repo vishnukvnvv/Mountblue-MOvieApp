@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export class UpdateDialogBox extends Component {
     render() {
-        if (!this.props.isOpen) {
-            return null;
-        }
-
         return (
             <div className='popUp-container'>
                 <div className='popUp'>
-                    <button id='close' onClick={this.props.openUpdateDialog}>x</button>
+                    <Link to={`${this.props.url}`}>
+                        <button id='close'>x</button>
+                    </Link>
                     {this.props.children}
                 </div>
             </div>

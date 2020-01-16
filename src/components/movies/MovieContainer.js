@@ -4,7 +4,7 @@ import Item from '../home/Item'
 export class MovieContainer extends Component {
 
     render() {
-        return (this.props.data.map((element, index) => <Item name={element.Title} id={element.id} key={index} onUpdate = {this.props.onUpdate} onDelete = {this.props.onDelete}>
+        return (this.props.data.map((element, index) => <Item name={element.Title} id={element.id} key={index} onUpdate = {this.props.onUpdate} onDelete = {this.props.onDelete} url = {this.props.url}>
             <div className = 'movies'>
                 <p><b>Id</b>:{element.id}</p>
                 <p><b>Title</b>: {element.Title}</p>
