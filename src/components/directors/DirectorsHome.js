@@ -3,6 +3,7 @@ import { Switch, Link, Route } from 'react-router-dom'
 import AddDirector from './AddDirector';
 import UpdateDirector from './UpdateDirector';
 import DeleteDirector from './DeleteDirector';
+import SingleDirector from './SingleDirector';
 
 class DirectorsHome extends Component {
 
@@ -99,7 +100,9 @@ class DirectorsHome extends Component {
                 </Link>
                 {this.state.data.map((element, index) => <div className="lists" position={element.id} key={index}>
                     <div>
-                        <h1 className="single-record">{element.name}</h1>
+                        <Link to={`/directors/${element.id}`}>
+                            <h1 className="single-record" >{element.name}</h1>
+                        </Link>
                         <p><b>Id</b>: {element.id}</p>
                         <p><b>Name</b>: {element.name}</p>
                     </div>
@@ -114,6 +117,7 @@ class DirectorsHome extends Component {
                 </div>
                 )}
                 <Switch>
+                    <Route path="/directors/:id" component={SingleDirector}/>}/>} />
                     <Route path="/directors/add" component={() => <AddDirector addNewRecord={this.addNewRecord} />} />
                     <Route path="/directors/:id/update" component={() => <UpdateDirector record={this.state.singleRecord} onUpdateApi={this.onUpdateApi} />} />
                     <Route path="/directors/:id/delete" component={() => <DeleteDirector deleteApiReq={this.deleteApiReq} />} />

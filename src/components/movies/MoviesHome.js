@@ -3,6 +3,7 @@ import { Switch, Link, Route } from 'react-router-dom';
 import AddNew from './AddNew';
 import UpdateMovie from './UpdateMovie';
 import DeleteMovie from './DeleteMovie';
+import SingleMovie from './SingleMovie';
 
 class MoviesHome extends Component {
 
@@ -47,22 +48,22 @@ class MoviesHome extends Component {
   }
 
   modifyObj = (obj) => {
-      const newObj = {};
-      newObj.title = obj.Title;
-      newObj.desc = obj.Description;
-      newObj.runtime = obj.Runtime;
-      newObj.genre = obj.Genre;
-      newObj.rate = obj.Rating;
-      newObj.metascore = obj.Metascore;
-      newObj.votes = obj.Votes;
-      newObj.gross = obj.Gross_Earning_in_Mil;
-      newObj.directorId = obj.DirectorId;
-      newObj.actor = obj.Actor;
-      newObj.year = obj.Year;
-      return newObj;
-    }
+    const newObj = {};
+    newObj.title = obj.Title;
+    newObj.desc = obj.Description;
+    newObj.runtime = obj.Runtime;
+    newObj.genre = obj.Genre;
+    newObj.rate = obj.Rating;
+    newObj.metascore = obj.Metascore;
+    newObj.votes = obj.Votes;
+    newObj.gross = obj.Gross_Earning_in_Mil;
+    newObj.directorId = obj.DirectorId;
+    newObj.actor = obj.Actor;
+    newObj.year = obj.Year;
+    return newObj;
+  }
 
-  updateApiReq =async (data) => {
+  updateApiReq = async (data) => {
     const newObj = this.modifyObj(data);
     await fetch("http://localhost:8082/api/movies/" + data.id, {
       method: 'PUT',
@@ -86,7 +87,7 @@ class MoviesHome extends Component {
     });
   }
 
-  onDeleteReq =async () =>{
+  onDeleteReq = async () => {
     await fetch("http://localhost:8082/api/movies/" + this.state.id, {
       method: 'DELETE',
       headers: {
@@ -107,7 +108,9 @@ class MoviesHome extends Component {
           <button className='add' >Add Movie</button>
         </Link>
         {this.state.data.map((element, index) => <div className="lists" position={element.id} key={index}>
-          <h1>{element.Title}</h1>
+          <Link to = {`/movies/${element.id}`}>
+            <h1 className="single-record">{element.Title}</h1>
+          </Link>
           <div className='movies'>
             <p><b>Id</b>:{element.id}</p>
             <p><b>Title</b>: {element.Title}</p>
@@ -124,17 +127,18 @@ class MoviesHome extends Component {
           </div>
           <div className="buttons">
             <Link to={`/movies/${element.id}/update`}>
-              <button className="update" onClick = {this.onUpdate}>Update</button>
+              <button className="update" onClick={this.onUpdate}>Update</button>
             </Link>
             <Link to={`/movies/${element.id}/delete`}>
-              <button className="update delete" onClick = {this.onDelete}>Delete</button>
+              <button className="update delete" onClick={this.onDelete}>Delete</button>
             </Link>
           </div>
         </div>)}
         <Switch>
-          <Route path="/movies/add" component={() => <AddNew addReq = {this.addReq}/>} />
-          <Route path="/movies/:id/update" component={() => <UpdateMovie record = {this.state.singleRecord} updateApiReq = {this.updateApiReq}/>} />
-          <Route path="/movies/:id/delete" component={() => <DeleteMovie onDeleteReq = {this.onDeleteReq}/>} />
+          <Route path="/movies/:id" component={SingleMovie} />
+          <Route path="/movies/add" component={() => <AddNew addReq={this.addReq} />} />
+          <Route path="/movies/:id/update" component={() => <UpdateMovie record={this.state.singleRecord} updateApiReq={this.updateApiReq} />} />
+          <Route path="/movies/:id/delete" component={() => <DeleteMovie onDeleteReq={this.onDeleteReq} />} />
         </Switch>
       </div>
     )

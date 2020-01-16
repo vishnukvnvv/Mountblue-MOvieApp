@@ -163,10 +163,24 @@ h3 {
   margin: 0;
 }
 
-.del{
+.del {
   margin-left: 90%;
 }
 
 .d-movies {
- margin-top: 5%;
+  margin-top: 5%;
+}
+
+.single-record {
+  color: black;
+  text-decoration: underline;
+}
+
+.open-record {
+  text-align: center;
+}
+
+.open-record-movie {
+  text-align: center;
+  margin-top: 5%;
 }
