@@ -117,10 +117,10 @@ class DirectorsHome extends Component {
                 </div>
                 )}
                 <Switch>
-                    <Route path="/directors/:id" component={SingleDirector}/>}/>} />
                     <Route path="/directors/add" component={() => <AddDirector addNewRecord={this.addNewRecord} />} />
                     <Route path="/directors/:id/update" component={() => <UpdateDirector record={this.state.singleRecord} onUpdateApi={this.onUpdateApi} />} />
                     <Route path="/directors/:id/delete" component={() => <DeleteDirector deleteApiReq={this.deleteApiReq} />} />
+                    <Route path="/directors/:id" component={SingleDirector}/>
                 </Switch>
             </div>
         )

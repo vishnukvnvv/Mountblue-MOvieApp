@@ -108,7 +108,7 @@ class MoviesHome extends Component {
           <button className='add' >Add Movie</button>
         </Link>
         {this.state.data.map((element, index) => <div className="lists" position={element.id} key={index}>
-          <Link to = {`/movies/${element.id}`}>
+          <Link to={`/movies/${element.id}`}>
             <h1 className="single-record">{element.Title}</h1>
           </Link>
           <div className='movies'>
@@ -135,10 +135,10 @@ class MoviesHome extends Component {
           </div>
         </div>)}
         <Switch>
-          <Route path="/movies/:id" component={SingleMovie} />
           <Route path="/movies/add" component={() => <AddNew addReq={this.addReq} />} />
           <Route path="/movies/:id/update" component={() => <UpdateMovie record={this.state.singleRecord} updateApiReq={this.updateApiReq} />} />
           <Route path="/movies/:id/delete" component={() => <DeleteMovie onDeleteReq={this.onDeleteReq} />} />
+          <Route path="/movies/:id" component={SingleMovie} />
         </Switch>
       </div>
     )
